@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fanie Show!</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #fce4ec;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: 100px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    }
+    h1, h2 {
+      color: #d81b60;
+    }
+    button {
+      margin: 10px;
+      padding: 15px 25px;
+      border: none;
+      border-radius: 10px;
+      background-color: #ec407a;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #d81b60;
+    }
+    .hidden {
+      display: none;
+    }
+    #slideshow img {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="welcome">
+    <h1>Welcome to Fanie Show!</h1>
+    <button onclick="startQuiz()">Continue to Quiz</button>
+  </div>
+
+  <div class="container hidden" id="quiz">
+    <h2 id="questionText"></h2>
+    <div id="options"></div>
+  </div>
+
+  <div class="container hidden" id="final">
+    <h1>Happy Birthday Sayang!</h1>
+    <p>Wish you all the best!</p>
+    <div id="slideshow">
+      <img id="slideImg" src="" alt="Slideshow" />
+    </div>
+    <audio autoplay loop>
+      <source src="lagubirthday.mp3" type="audio/mpeg" />
+      Browser kamu tidak mendukung audio.
+    </audio>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "Apa makanan kesukaan/comfort food Fanie?",
+        options: ["Rendang", "Soto", "Babi"],
+        answer: 1
+      },
+      {
+        question: "Fanie pingin banget beli apa akhir akhir ini?",
+        options: ["Chocolatos", "Membership Pilates", "Kamera Ricoh"],
+        answer: 2
+      },
+      {
+        question: "Kapan ulang tahun Fanie?",
+        options: ["Hari ini dungz", "Apa itu ulang tahun?", "Eternity"],
+        answer: 0
+      }
+    ];
+
+    const images = ["Fanie1.jpg", "Fanie2.jpg", "Fanie3.jpg", "Fanie4.jpg", "Fanie5.jpg"];
+    let currentQuestion = 0;
+
+    function startQuiz() {
+      document.getElementById("welcome").classList.add("hidden");
+      document.getElementById("quiz").classList.remove("hidden");
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById("questionText").innerText = q.question;
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.onclick = () => handleAnswer(i);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(selected) {
+      const correct = questions[currentQuestion].answer;
+      if (selected === correct) {
+        currentQuestion++;
+        if (currentQuestion >= questions.length) {
+          startSlideshow();
+        } else {
+          showQuestion();
+        }
+      } else {
+        alert("Jawaban salah! Balik ke awal yaa 😛");
+        location.reload();
+      }
+    }
+
+    function startSlideshow() {
+      document.getElementById("quiz").classList.add("hidden");
+      document.getElementById("final").classList.remove("hidden");
+      let imgIndex = 0;
+      const imgEl = document.getElementById("slideImg");
+      imgEl.src = images[imgIndex];
+      setInterval(() => {
+        imgIndex = (imgIndex + 1) % images.length;
+        imgEl.src = images[imgIndex];
+      }, 2500); // Ganti setiap 2.5 detik
+    }
+  </script>
+</body>
+</html>
