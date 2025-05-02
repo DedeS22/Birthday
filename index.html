@@ -27,19 +27,28 @@
       color: white;
       cursor: pointer;
     }
+    #slideshow-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+    }
     .slideshow img {
-      max-width: 80%;
+      width: 100%;
+      max-width: 400px;
       height: auto;
       border-radius: 20px;
+      margin-bottom: 20px;
     }
     .birthday-message {
       font-size: 24px;
       font-weight: bold;
-      margin-top: 20px;
+      margin-bottom: 10px;
     }
     .sub-message {
       font-size: 18px;
-      margin-top: 10px;
+      margin-bottom: 20px;
     }
   </style>
 </head>
@@ -60,11 +69,11 @@
 
   <!-- Slideshow Screen -->
   <div id="slideshow-screen" class="screen">
+    <div class="birthday-message">Happy Birthday Sayang!</div>
+    <div class="sub-message">Wish you all the best!</div>
     <div class="slideshow">
       <img id="slideshow-image" src="" alt="Fanie Photo"/>
     </div>
-    <div class="birthday-message">Happy Birthday Sayang!</div>
-    <div class="sub-message">Wish you all the best!</div>
     <audio id="birthday-audio" autoplay loop>
       <source src="lagubirthday.mp3" type="audio/mpeg">
     </audio>
