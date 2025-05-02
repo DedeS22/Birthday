@@ -1,71 +1,72 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fanie Show!</title>
+  <title>Fanie Show</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background-color: #fce4ec;
-      margin: 0;
-      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #fff0f5;
       text-align: center;
+      padding: 40px;
     }
-    .container {
-      max-width: 600px;
-      margin: 100px auto;
-      background-color: white;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    .screen {
+      display: none;
     }
-    h1, h2 {
-      color: #d81b60;
+    .active {
+      display: block;
     }
     button {
       margin: 10px;
-      padding: 15px 25px;
-      border: none;
-      border-radius: 10px;
-      background-color: #ec407a;
-      color: white;
+      padding: 10px 20px;
       font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #ff69b4;
+      color: white;
       cursor: pointer;
     }
-    button:hover {
-      background-color: #d81b60;
+    .slideshow img {
+      max-width: 80%;
+      height: auto;
+      border-radius: 20px;
     }
-    .hidden {
-      display: none;
+    .birthday-message {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
     }
-    #slideshow img {
-      max-width: 100%;
-      max-height: 300px;
-      border-radius: 15px;
+    .sub-message {
+      font-size: 18px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="welcome">
+
+  <!-- Opening Screen -->
+  <div id="start-screen" class="screen active">
     <h1>Welcome to Fanie Show!</h1>
+    <p>Let's have a little quiz!</p>
     <button onclick="startQuiz()">Continue to Quiz</button>
   </div>
 
-  <div class="container hidden" id="quiz">
-    <h2 id="questionText"></h2>
+  <!-- Quiz Screens -->
+  <div id="quiz-screen" class="screen">
+    <h2 id="question"></h2>
     <div id="options"></div>
   </div>
 
-  <div class="container hidden" id="final">
-    <h1>Happy Birthday Sayang!</h1>
-    <p>Wish you all the best!</p>
-    <div id="slideshow">
-      <img id="slideImg" src="" alt="Slideshow" />
+  <!-- Slideshow Screen -->
+  <div id="slideshow-screen" class="screen">
+    <div class="slideshow">
+      <img id="slideshow-image" src="" alt="Fanie Photo"/>
     </div>
-    <audio autoplay loop>
-      <source src="lagubirthday.mp3" type="audio/mpeg" />
-      Browser kamu tidak mendukung audio.
+    <div class="birthday-message">Happy Birthday Sayang!</div>
+    <div class="sub-message">Wish you all the best!</div>
+    <audio id="birthday-audio" autoplay loop>
+      <source src="lagubirthday.mp3" type="audio/mpeg">
     </audio>
   </div>
 
@@ -74,67 +75,68 @@
       {
         question: "Apa makanan kesukaan/comfort food Fanie?",
         options: ["Rendang", "Soto", "Babi"],
-        answer: 1
+        answer: "Soto"
       },
       {
         question: "Fanie pingin banget beli apa akhir akhir ini?",
         options: ["Chocolatos", "Membership Pilates", "Kamera Ricoh"],
-        answer: 2
+        answer: "Kamera Ricoh"
       },
       {
         question: "Kapan ulang tahun Fanie?",
         options: ["Hari ini dungz", "Apa itu ulang tahun?", "Eternity"],
-        answer: 0
+        answer: "Hari ini dungz"
       }
     ];
 
-    const images = ["Fanie1.jpg", "Fanie2.jpg", "Fanie3.jpg", "Fanie4.jpg", "Fanie5.jpg"];
     let currentQuestion = 0;
 
     function startQuiz() {
-      document.getElementById("welcome").classList.add("hidden");
-      document.getElementById("quiz").classList.remove("hidden");
+      document.getElementById("start-screen").classList.remove("active");
+      document.getElementById("quiz-screen").classList.add("active");
       showQuestion();
     }
 
     function showQuestion() {
       const q = questions[currentQuestion];
-      document.getElementById("questionText").innerText = q.question;
+      document.getElementById("question").textContent = q.question;
       const optionsDiv = document.getElementById("options");
       optionsDiv.innerHTML = "";
-      q.options.forEach((opt, i) => {
+      q.options.forEach(option => {
         const btn = document.createElement("button");
-        btn.innerText = opt;
-        btn.onclick = () => handleAnswer(i);
+        btn.textContent = option;
+        btn.onclick = () => checkAnswer(option);
         optionsDiv.appendChild(btn);
       });
     }
 
-    function handleAnswer(selected) {
-      const correct = questions[currentQuestion].answer;
-      if (selected === correct) {
+    function checkAnswer(selected) {
+      if (selected === questions[currentQuestion].answer) {
         currentQuestion++;
-        if (currentQuestion >= questions.length) {
-          startSlideshow();
-        } else {
+        if (currentQuestion < questions.length) {
           showQuestion();
+        } else {
+          showSlideshow();
         }
       } else {
-        alert("Jawaban salah! Balik ke awal yaa 😛");
+        alert("Yah salah! Balik ke awal ya~");
         location.reload();
       }
     }
 
-    function startSlideshow() {
-      document.getElementById("quiz").classList.add("hidden");
-      document.getElementById("final").classList.remove("hidden");
-      let imgIndex = 0;
-      const imgEl = document.getElementById("slideImg");
-      imgEl.src = images[imgIndex];
+    function showSlideshow() {
+      document.getElementById("quiz-screen").classList.remove("active");
+      document.getElementById("slideshow-screen").classList.add("active");
+
+      const images = ["Fanie1.jpg", "Fanie2.jpg", "Fanie3.jpg", "Fanie4.jpg", "Fanie5.jpg"];
+      let idx = 0;
+      const img = document.getElementById("slideshow-image");
+
+      img.src = images[idx];
       setInterval(() => {
-        imgIndex = (imgIndex + 1) % images.length;
-        imgEl.src = images[imgIndex];
-      }, 2500); // Ganti setiap 2.5 detik
+        idx = (idx + 1) % images.length;
+        img.src = images[idx];
+      }, 2500);
     }
   </script>
 </body>
